@@ -32,6 +32,7 @@
 /build/
 *.g.dart
 **.g.dart
+*.env
 
 # Web related
 lib/generated_plugin_registrant.dart

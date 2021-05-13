@@ -1,3 +1,5 @@
+import 'package:coin_graph/model/coin_model.dart';
+import 'package:coin_graph/model/coins_model.dart';
 import 'package:coin_graph/resources/coin_connect.dart';
 import 'package:mobx/mobx.dart';
 part 'controller.g.dart';
@@ -6,16 +8,18 @@ class Controller = ControllerBase with _$Controller;
 
 abstract class ControllerBase with Store {
   @observable
-  int count = 0;
+  List<CoinModel> _coins = [];
 
-  @action
-  addClick() {
-    count += 2;
+  get coins => _coins;
+
+  ControllerBase() : super() {
+    fetchCoins();
   }
 
-  @computed
-  coins() {
+  @action
+  fetchCoins() async {
     CoinConn conn = CoinConn();
-    conn.coins('key');
+    CoinsModel coinsModel = await conn.coins();
+    _coins = coinsModel.coins;
   }
 }
