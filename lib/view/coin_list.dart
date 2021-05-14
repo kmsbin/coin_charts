@@ -1,4 +1,5 @@
 import 'package:coin_graph/controllers/controller.dart';
+import 'package:coin_graph/view/coin_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -31,6 +32,12 @@ class CoinList extends StatelessWidget {
                   offSetBuffer = scrollController.offset;
                 }
                 return ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CoinGraphScreen(idCoin: controller.coins[index].id)),
+                    );
+                  },
                   leading: Image.network(controller.coins[index].urlImage),
                   title: Text(controller.coins[index].name),
                   subtitle: Text(controller.coins[index].price.toString()),

@@ -7,10 +7,9 @@ class CoinConn {
   Future<CoinsModel> coins() async {
     final String urlBase =
         "https://coingecko.p.rapidapi.com/coins/markets?vs_currency=usd&page=1&per_page=100&order=market_cap_desc";
-    Response response;
-    Options options = Options();
-    options.headers = {"x-rapidapi-key": env['API_KEY'], "x-rapidapi-host": "coingecko.p.rapidapi.com"};
-    response = await Dio().get(urlBase, options: options);
+    Options options =
+        Options(headers: {"x-rapidapi-key": env['API_KEY'], "x-rapidapi-host": "coingecko.p.rapidapi.com"});
+    Response response = await Dio().get(urlBase, options: options);
     CoinsModel coinsModel = CoinsModel([]);
     response.data.forEach((coin) {
       coinsModel.coins.add(CoinModel(
