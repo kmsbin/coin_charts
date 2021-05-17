@@ -4,23 +4,46 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CoinsGraphConn {
-  Future<CoinChartModel> dataChart(final String idCoin) async {
-    final Options options = Options(headers: {
-      "x-rapidapi-key": env['API_KEY'],
-      "x-rapidapi-host": "coingecko.p.rapidapi.com",
-    });
-    final String urlBase = "https://coingecko.p.rapidapi.com/coins/$idCoin/market_chart";
+  final Options options = Options(headers: {
+    "x-rapidapi-key": env['API_KEY'],
+    "x-rapidapi-host": "coingecko.p.rapidapi.com",
+  });
 
-    final Response response = await Dio().get(urlBase, options: options, queryParameters: {'vs_currency': "usd", 'days': '1'});
-    // print(response.data);
-    CoinChartModel _coinChartModel = CoinChartModel(id: idCoin);
-    List<double> yAxis = [];
-    response.data['prices'].forEach((item) {
-      _coinChartModel.spots.add(FlSpot(item.first.toDouble(), item.last.toDouble()));
-      yAxis.add(item.last.toDouble());
-    });
-    _coinChartModel.minPrice = yAxis.reduce((first, last) => first > last ? last : first) * 0.99;
+  Future<CoinChartModel> dataChart(final String idCoin, final String vsCurrency, final String period) async {
+    final String urlBase = "https://coingecko.p.rapidapi.com/coins/$idCoin/market_chart";
+    Map<String, String> parameters = {'vs_currency': vsCurrency, 'days': period};
+    final Response response = await Dio().get(urlBase, options: options, queryParameters: parameters);
+
+    CoinChartModel _coinChartModel = setDataChart(response.data, idCoin);
 
     return _coinChartModel;
+  }
+
+  CoinChartModel setDataChart(data, id) {
+    CoinChartModel coinChartModel = CoinChartModel(id: id);
+    coinChartModel.minPrice = data['prices'].first.first.toDouble();
+    data['prices'].forEach((item) {
+      coinChartModel.spots.add(FlSpot(item.first.toDouble(), item.last.toDouble()));
+      coinChartModel.minPrice = coinChartModel.minPrice > item.last ? item.last : coinChartModel.minPrice;
+      coinChartModel.maxPrice =
+          coinChartModel.maxPrice < item.last.toDouble() ? item.last.toDouble() : coinChartModel.maxPrice;
+    });
+    coinChartModel.titleInterval = (coinChartModel.maxPrice - coinChartModel.minPrice) / 4;
+    coinChartModel.minPrice *= 0.99;
+    return coinChartModel;
+  }
+
+  Future<CoinChartModel> dataChartFromUnixTime(FetchCoin fetchCoinData) async {
+    final String urlBase = "https://coingecko.p.rapidapi.com/coins/${fetchCoinData.idCoin}/market_chart/range";
+    Map<String, String> parameters = {
+      'vs_currency': fetchCoinData.vsCurrency,
+      'from': fetchCoinData.fromUnixTime,
+      'to': fetchCoinData.toUnixTime
+    };
+    final Response response = await Dio().get(urlBase, options: options, queryParameters: parameters);
+
+    CoinChartModel coinChartModel = setDataChart(response.data, fetchCoinData.idCoin);
+
+    return coinChartModel;
   }
 }
