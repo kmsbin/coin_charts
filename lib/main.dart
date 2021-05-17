@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/',
-      routes: {
-        '/': (context) => CoinList(),
-      },
+      routes: {'/': (context) => CoinList(), '/coin_graph': (context) => CoinGraphScreen(idCoin: 'bitcoin')},
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
