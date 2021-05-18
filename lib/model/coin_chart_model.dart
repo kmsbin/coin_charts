@@ -6,6 +6,7 @@ class CoinChartModel {
   double minPrice = 0.0;
   double maxPrice = 0.0;
   double titleInterval = 0.0;
+  String priceChangePercentage;
   List<FlSpot> spots = [];
 
   CoinChartModel({

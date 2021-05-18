@@ -35,7 +35,11 @@ class CoinList extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CoinGraphScreen(idCoin: controller.coins[index].id)),
+                      MaterialPageRoute(
+                          builder: (context) => CoinGraphScreen(
+                              idCoin: controller.coins[index].id,
+                              price: controller.coins[index].price.toString(),
+                              pricePercent: controller.coins[index].priceChangePercent)),
                     );
                   },
                   leading: Image.network(controller.coins[index].urlImage),

@@ -12,8 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/coin_graph',
-      routes: {'/': (context) => CoinList(), '/coin_graph': (context) => CoinGraphScreen(idCoin: 'bitcoin')},
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => CoinList(),
+        '/coin_graph': (context) => CoinGraphScreen(
+              idCoin: 'bitcoin',
+              price: '00.00',
+            )
+      },
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
