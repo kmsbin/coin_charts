@@ -35,82 +35,93 @@ class CoinGraphScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Observer(builder: (ctxt) {
-                    if (coinGraphController?.coinChartModel?.spots?.isNotEmpty ?? false) {
-                      return Container(
-                        child: LineChart(
-                          LineChartData(
-                            borderData: FlBorderData(show: true, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
-                            lineTouchData: LineTouchData(
-                              enabled: true,
-                              touchTooltipData: LineTouchTooltipData(
-                                  maxContentWidth: 100,
-                                  fitInsideHorizontally: true,
-                                  getTooltipItems: (List<LineBarSpot> linesBarSpots) {
-                                    List<LineTooltipItem> lineTooltipItem = [];
-                                    linesBarSpots.forEach((lineSpot) {
-                                      lineTooltipItem.add(LineTooltipItem(lineSpot.y.toStringAsFixed(5), TextStyle(color: Colors.orangeAccent)));
-                                    });
-                                    // print(linesBarSpots.);
-                                    return lineTooltipItem;
-                                  }),
-                            ),
-                            titlesData: FlTitlesData(
-                                leftTitles: SideTitles(
-                                    reservedSize: 40,
-                                    getTitles: coinGraphController.titlePrepare,
-                                    showTitles: true,
-                                    interval: coinGraphController.coinChartModel.titleInterval),
-                                bottomTitles: SideTitles(showTitles: false)),
-                            minY: coinGraphController.coinChartModel.minPrice,
-                            gridData: FlGridData(
-                                show: true,
-                                getDrawingHorizontalLine: (index) {
-                                  return FlLine(strokeWidth: 0);
-                                }),
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: coinGraphController.coinChartModel.spots,
-                                isCurved: true,
-                                barWidth: 1.5,
-                                gradientFrom: Offset(0, 1),
-                                gradientTo: Offset(0, 1),
-                                colorStops: [0.25, 0.75],
-                                colors: [
-                                  Colors.orange,
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 2,
+                  child: Container(
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.015),
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Observer(builder: (ctxt) {
+                      if (coinGraphController?.coinChartModel?.spots?.isNotEmpty ?? false) {
+                        return Container(
+                          child: LineChart(
+                              LineChartData(
+                                borderData: FlBorderData(show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
+                                lineTouchData: LineTouchData(
+                                  enabled: true,
+                                  touchTooltipData: LineTouchTooltipData(
+                                      maxContentWidth: 100,
+                                      fitInsideHorizontally: true,
+                                      getTooltipItems: (List<LineBarSpot> linesBarSpots) {
+                                        List<LineTooltipItem> lineTooltipItem = [];
+                                        linesBarSpots.forEach((lineSpot) {
+                                          lineTooltipItem.add(LineTooltipItem(lineSpot.y.toStringAsFixed(5), TextStyle(color: Colors.orangeAccent)));
+                                        });
+                                        // print(linesBarSpots.);
+                                        return lineTooltipItem;
+                                      }),
+                                ),
+                                titlesData: FlTitlesData(
+                                    leftTitles: SideTitles(
+                                        reservedSize: 40,
+                                        getTitles: coinGraphController.titlePrepare,
+                                        showTitles: true,
+                                        interval: coinGraphController.coinChartModel.titleInterval),
+                                    bottomTitles: SideTitles(showTitles: false)),
+                                minY: coinGraphController.coinChartModel.minPrice,
+                                gridData: FlGridData(
+                                    show: true,
+                                    getDrawingHorizontalLine: (index) {
+                                      return FlLine(strokeWidth: 0);
+                                    }),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: coinGraphController.coinChartModel.spots,
+                                    isCurved: true,
+                                    barWidth: 1.5,
+                                    gradientFrom: Offset(1, 1),
+                                    gradientTo: Offset(0, 0),
+                                    colorStops: [0, 0.5, 1],
+                                    colors: [Color(0xff8E3670), Color(0xff7E44C8)],
+                                    belowBarData: BarAreaData(
+                                      show: false,
+                                      applyCutOffY: false,
+                                      colors: [Colors.blue.withOpacity(0.3), Colors.lightBlue.withOpacity(0.3)],
+                                    ),
+                                    aboveBarData: BarAreaData(
+                                      show: false,
+                                    ),
+                                    dotData: FlDotData(
+                                      show: false,
+                                    ),
+                                  ),
                                 ],
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  applyCutOffY: false,
-                                  colors: [Colors.blue.withOpacity(0.3), Colors.lightBlue.withOpacity(0.3)],
-                                ),
-                                aboveBarData: BarAreaData(
-                                  show: false,
-                                ),
-                                dotData: FlDotData(
-                                  show: false,
-                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                            constraints: BoxConstraints(
-                              maxHeight: 50,
-                              maxWidth: 50,
-                            ),
-                            child: Container(child: CircularProgressIndicator())),
-                      );
-                    }
-                  }),
+                              swapAnimationDuration: Duration(milliseconds: 1500),
+                              swapAnimationCurve: Curves.linear),
+                        );
+                      } else {
+                        return Center(
+                          child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight: 50,
+                                maxWidth: 50,
+                              ),
+                              child: Container(child: CircularProgressIndicator())),
+                        );
+                      }
+                    }),
+                  ),
                 ),
                 Container(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black12,
+                  ),
                   margin: EdgeInsets.only(top: 20),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

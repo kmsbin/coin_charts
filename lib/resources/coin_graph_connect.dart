@@ -33,6 +33,7 @@ class CoinsGraphConn {
     });
     coinChartModel.titleInterval = (coinChartModel.maxPrice - coinChartModel.minPrice) / 4;
     coinChartModel.minPrice *= 0.99;
+
     return coinChartModel;
   }
 
