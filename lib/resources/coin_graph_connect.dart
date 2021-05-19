@@ -4,6 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class CoinsGraphConn {
+  Map<String, String> currencys = {'usd': '\$', 'jpy': '¥', 'brl': 'R\$', 'eur': '€'};
+
   final Options options = Options(headers: {
     "x-rapidapi-key": env['API_KEY'],
     "x-rapidapi-host": "coingecko.p.rapidapi.com",
@@ -47,5 +49,15 @@ class CoinsGraphConn {
     CoinChartModel coinChartModel = setDataChart(response.data, fetchCoinData.idCoin);
 
     return coinChartModel;
+  }
+
+  Future<String> getCurrentPrice({final String idCoin, final String vsCurrency}) async {
+    final String urlBase = "https://coingecko.p.rapidapi.com/coins/$idCoin";
+    Map<String, String> parameters = {'vs_currency': vsCurrency};
+    final Response response = await Dio().get(urlBase, options: options, queryParameters: parameters);
+
+    print(response.data['market_data']['current_price'][vsCurrency]);
+
+    return '${currencys[vsCurrency]} ${response.data['market_data']['current_price'][vsCurrency].toString()}';
   }
 }

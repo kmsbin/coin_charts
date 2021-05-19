@@ -10,34 +10,45 @@ abstract class CoinGraphControllerBase with Store {
   String vsCurrency = 'usd';
 
   @observable
+  String currentPrice = '';
+
+  @observable
   String idCoin = 'bitcoin';
 
   @observable
   CoinChartModel coinChartModel = CoinChartModel(id: 'bitcoin');
 
   @action
+  vsCurrencyCoin(String updateVsCurrent) => vsCurrency = updateVsCurrent;
+
+  @action
+  coin(String updateCoin) => idCoin = updateCoin;
+
+  @action
   fetchCoinGraph({String coin, String vsCurrency, String days = '1'}) async {
-    this.vsCurrency = vsCurrency;
     this.idCoin = coin;
 
+    fetchCurrentPrice();
     coinChartModel = CoinChartModel(id: coin);
     coinChartModel = await CoinsGraphConn().dataChart(coin, vsCurrency, days);
   }
 
   @action
-  fetchCoinGraphFromUnixTime({String coin, String vsCurrency, String to, String from}) async {
-    vsCurrency = vsCurrency ?? this.vsCurrency;
-    coin = coin ?? this.idCoin;
-
-    coinChartModel = CoinChartModel(id: coin);
+  fetchCoinGraphFromUnixTime({String to, String from}) async {
+    fetchCurrentPrice();
+    coinChartModel = CoinChartModel(id: idCoin);
     coinChartModel = await CoinsGraphConn().dataChartFromUnixTime(FetchCoin(
-      idCoin: coin,
+      idCoin: idCoin,
       vsCurrency: vsCurrency,
       fromUnixTime: from,
       toUnixTime: to,
     ));
-    this.vsCurrency = vsCurrency;
-    this.idCoin = coin;
+    ;
+  }
+
+  @action
+  fetchCurrentPrice() async {
+    currentPrice = await CoinsGraphConn().getCurrentPrice(idCoin: idCoin, vsCurrency: vsCurrency);
   }
 
   String titlePrepare(double title) {

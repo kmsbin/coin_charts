@@ -12,7 +12,7 @@ class CoinList extends StatelessWidget {
     double offSetBuffer = 1;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Demo Home Page'),
+        title: Text('Coin chart'),
       ),
       body: Center(child: Observer(
         builder: (BuildContext context) {

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class CoinChartModel {
   String id;
+  String price;
   double minPrice = 0.0;
   double maxPrice = 0.0;
   double titleInterval = 0.0;

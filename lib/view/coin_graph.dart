@@ -15,9 +15,24 @@ class CoinGraphScreen extends StatelessWidget {
     'from': '',
   };
 
+  Map<String, String> getInitUnixTime() {
+    Map<String, String> lastRangeTime = {};
+    var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
+    var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+    oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
+    currentTime = currentTime.substring(0, currentTime.length - 3);
+
+    lastRangeTime['from'] = oneHourAgo;
+    lastRangeTime['to'] = currentTime;
+    return lastRangeTime;
+  }
+
   final CoinGraphController coinGraphController = CoinGraphController();
   @override
   Widget build(BuildContext context) {
+    coinGraphController.coin(idCoin);
+    lastRangeTime = getInitUnixTime();
+
     print(pricePercent);
     double pricePercentNum = double.parse(pricePercent) * 10;
     String percent = (double.parse(pricePercent) * 10).toStringAsPrecision(3) + '%';
@@ -30,13 +45,63 @@ class CoinGraphScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
           child: SafeArea(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('\$${this.price}', style: TextStyle(fontSize: 30)),
-                    Text(
-                      percent,
-                      style: TextStyle(color: pricePercentNum > 0 ? Colors.green : Colors.red),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Observer(builder: (context) {
+                          return Text('${coinGraphController.currentPrice}', style: TextStyle(fontSize: 30));
+                        }),
+                        Text(
+                          percent,
+                          style: TextStyle(color: pricePercentNum > 0 ? Colors.green : Colors.red),
+                        )
+                      ],
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          // TextField(),
+                          // TextField(),
+                          Container(
+                            child: DropdownButtonHideUnderline(
+                              child: Observer(builder: (context) {
+                                return DropdownButton(
+                                    onChanged: (String coin) {
+                                      coinGraphController.vsCurrencyCoin(coin);
+                                      coinGraphController.fetchCoinGraphFromUnixTime(from: lastRangeTime['from'], to: lastRangeTime['to']);
+                                    },
+                                    onTap: () {
+                                      print('taped');
+                                    },
+                                    value: coinGraphController.vsCurrency,
+                                    items: [
+                                      DropdownMenuItem<String>(
+                                        child: Text('Dólar'),
+                                        value: 'usd',
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        child: Text('Yene'),
+                                        value: 'jpy',
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        child: Text('Real'),
+                                        value: 'brl',
+                                      ),
+                                      DropdownMenuItem<String>(
+                                        child: Text('Euro'),
+                                        value: 'eur',
+                                      ),
+                                    ]);
+                              }),
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -54,8 +119,7 @@ class CoinGraphScreen extends StatelessWidget {
                         return Container(
                           child: LineChart(
                               LineChartData(
-                                borderData: FlBorderData(
-                                    show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
+                                borderData: FlBorderData(show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
                                 lineTouchData: LineTouchData(
                                   enabled: true,
                                   touchTooltipData: LineTouchTooltipData(
@@ -64,8 +128,7 @@ class CoinGraphScreen extends StatelessWidget {
                                       getTooltipItems: (List<LineBarSpot> linesBarSpots) {
                                         List<LineTooltipItem> lineTooltipItem = [];
                                         linesBarSpots.forEach((lineSpot) {
-                                          lineTooltipItem.add(LineTooltipItem(
-                                              lineSpot.y.toStringAsFixed(5), TextStyle(color: Colors.orangeAccent)));
+                                          lineTooltipItem.add(LineTooltipItem(lineSpot.y.toStringAsFixed(5), TextStyle(color: Color(0xff8E3670))));
                                         });
                                         // print(linesBarSpots.);
                                         return lineTooltipItem;
@@ -74,6 +137,7 @@ class CoinGraphScreen extends StatelessWidget {
                                 titlesData: FlTitlesData(
                                     leftTitles: SideTitles(
                                         reservedSize: 40,
+                                        getTextStyles: (title) => TextStyle(color: Colors.white60),
                                         getTitles: coinGraphController.titlePrepare,
                                         showTitles: true,
                                         interval: coinGraphController.coinChartModel.titleInterval),
@@ -137,10 +201,7 @@ class CoinGraphScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          var oneHourAgo = DateTime.now()
-                              .subtract(Duration(hours: Duration.minutesPerHour * 6))
-                              .millisecondsSinceEpoch
-                              .toString();
+                          var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -148,8 +209,7 @@ class CoinGraphScreen extends StatelessWidget {
                           lastRangeTime['from'] = oneHourAgo;
                           lastRangeTime['to'] = currentTime;
 
-                          coinGraphController.fetchCoinGraphFromUnixTime(
-                              coin: idCoin, vsCurrency: 'usd', from: oneHourAgo, to: currentTime);
+                          coinGraphController.fetchCoinGraphFromUnixTime(from: oneHourAgo, to: currentTime);
                         },
                         child: Container(child: Text('1H')),
                       ),
@@ -173,10 +233,7 @@ class CoinGraphScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          var oneYearAgo = DateTime.now()
-                              .subtract(Duration(days: (Duration.hoursPerDay * 24) * 365))
-                              .millisecondsSinceEpoch
-                              .toString();
+                          var oneYearAgo = DateTime.now().subtract(Duration(days: (Duration.hoursPerDay * 24) * 365)).millisecondsSinceEpoch.toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneYearAgo = oneYearAgo.substring(0, oneYearAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -184,57 +241,13 @@ class CoinGraphScreen extends StatelessWidget {
                           lastRangeTime['from'] = oneYearAgo;
                           lastRangeTime['to'] = currentTime;
 
-                          coinGraphController.fetchCoinGraphFromUnixTime(
-                              coin: idCoin, vsCurrency: 'usd', from: oneYearAgo, to: currentTime);
+                          coinGraphController.fetchCoinGraphFromUnixTime(from: oneYearAgo, to: currentTime);
                         },
                         child: Container(child: Text('1Y')),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width * 0.80,
-                  child: Row(
-                    children: [
-                      // TextField(),
-                      // TextField(),
-                      Container(
-                        child: DropdownButtonHideUnderline(
-                          child: Observer(builder: (context) {
-                            return DropdownButton(
-                                onChanged: (coin) {
-                                  coinGraphController.fetchCoinGraphFromUnixTime(
-                                      vsCurrency: coin, from: lastRangeTime['from'], to: lastRangeTime['to']);
-                                },
-                                onTap: () {
-                                  print('taped');
-                                },
-                                value: coinGraphController.vsCurrency,
-                                items: [
-                                  DropdownMenuItem<String>(
-                                    child: Text('Dólar'),
-                                    value: 'usd',
-                                  ),
-                                  DropdownMenuItem<String>(
-                                    child: Text('Yene'),
-                                    value: 'jpy',
-                                  ),
-                                  DropdownMenuItem<String>(
-                                    child: Text('Real'),
-                                    value: 'brl',
-                                  ),
-                                  DropdownMenuItem<String>(
-                                    child: Text('Euro'),
-                                    value: 'eur',
-                                  ),
-                                ]);
-                          }),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           )),
