@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lottie/lottie.dart';
 
 class CoinGraphScreen extends StatelessWidget {
   final String idCoin;
@@ -17,7 +18,8 @@ class CoinGraphScreen extends StatelessWidget {
 
   Map<String, String> getInitUnixTime() {
     Map<String, String> lastRangeTime = {};
-    var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
+    var oneHourAgo =
+        DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
     var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
     oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
     currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -73,7 +75,8 @@ class CoinGraphScreen extends StatelessWidget {
                                 return DropdownButton(
                                     onChanged: (String coin) {
                                       coinGraphController.vsCurrencyCoin(coin);
-                                      coinGraphController.fetchCoinGraphFromUnixTime(from: lastRangeTime['from'], to: lastRangeTime['to']);
+                                      coinGraphController.fetchCoinGraphFromUnixTime(
+                                          from: lastRangeTime['from'], to: lastRangeTime['to']);
                                     },
                                     onTap: () {
                                       print('taped');
@@ -119,7 +122,8 @@ class CoinGraphScreen extends StatelessWidget {
                         return Container(
                           child: LineChart(
                               LineChartData(
-                                borderData: FlBorderData(show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
+                                borderData: FlBorderData(
+                                    show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
                                 lineTouchData: LineTouchData(
                                   enabled: true,
                                   touchTooltipData: LineTouchTooltipData(
@@ -128,7 +132,8 @@ class CoinGraphScreen extends StatelessWidget {
                                       getTooltipItems: (List<LineBarSpot> linesBarSpots) {
                                         List<LineTooltipItem> lineTooltipItem = [];
                                         linesBarSpots.forEach((lineSpot) {
-                                          lineTooltipItem.add(LineTooltipItem(lineSpot.y.toStringAsFixed(5), TextStyle(color: Color(0xff8E3670))));
+                                          lineTooltipItem.add(LineTooltipItem(
+                                              lineSpot.y.toStringAsFixed(5), TextStyle(color: Color(0xff8E3670))));
                                         });
                                         // print(linesBarSpots.);
                                         return lineTooltipItem;
@@ -176,13 +181,12 @@ class CoinGraphScreen extends StatelessWidget {
                         );
                       } else {
                         return Center(
-                          child: Container(
-                              constraints: BoxConstraints(
-                                maxHeight: 50,
-                                maxWidth: 50,
-                              ),
-                              child: Container(child: CircularProgressIndicator())),
-                        );
+                            child: Container(
+                                child: Lottie.asset(
+                          'assets/loading_animation.json',
+                          repeat: true,
+                          animate: true,
+                        )));
                       }
                     }),
                   ),
@@ -201,7 +205,10 @@ class CoinGraphScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
+                          var oneHourAgo = DateTime.now()
+                              .subtract(Duration(hours: Duration.minutesPerHour * 6))
+                              .millisecondsSinceEpoch
+                              .toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -233,7 +240,10 @@ class CoinGraphScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          var oneYearAgo = DateTime.now().subtract(Duration(days: (Duration.hoursPerDay * 24) * 365)).millisecondsSinceEpoch.toString();
+                          var oneYearAgo = DateTime.now()
+                              .subtract(Duration(days: (Duration.hoursPerDay * 24) * 365))
+                              .millisecondsSinceEpoch
+                              .toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneYearAgo = oneYearAgo.substring(0, oneYearAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);

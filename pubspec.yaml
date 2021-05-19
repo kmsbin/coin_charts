@@ -15,6 +15,7 @@ dependencies:
   flutter_dotenv: ^3.1.0
   dio: ^4.0.0
   fl_chart: ^0.36.1
+  lottie: ^1.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -26,6 +27,7 @@ flutter:
 
   assets: 
     - .env
+    - assets/
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # fonts:
   #   - family: Schyler
