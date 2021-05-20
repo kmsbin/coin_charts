@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coin_graph/controllers/controller.dart';
 import 'package:coin_graph/view/coin_graph.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,11 @@ class CoinList extends StatelessWidget {
                               pricePercent: controller.coins[index].priceChangePercent)),
                     );
                   },
-                  leading: Image.network(controller.coins[index].urlImage),
+                  leading: CachedNetworkImage(
+                    imageUrl: controller.coins[index].urlImage,
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                  ),
                   title: Text(controller.coins[index].name),
                   subtitle: Text(controller.coins[index].price.toString()),
                 );

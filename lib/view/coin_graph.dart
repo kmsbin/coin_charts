@@ -18,8 +18,7 @@ class CoinGraphScreen extends StatelessWidget {
 
   Map<String, String> getInitUnixTime() {
     Map<String, String> lastRangeTime = {};
-    var oneHourAgo =
-        DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
+    var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
     var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
     oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
     currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -75,12 +74,9 @@ class CoinGraphScreen extends StatelessWidget {
                                 return DropdownButton(
                                     onChanged: (String coin) {
                                       coinGraphController.vsCurrencyCoin(coin);
-                                      coinGraphController.fetchCoinGraphFromUnixTime(
-                                          from: lastRangeTime['from'], to: lastRangeTime['to']);
+                                      coinGraphController.fetchCoinGraphFromUnixTime(from: lastRangeTime['from'], to: lastRangeTime['to']);
                                     },
-                                    onTap: () {
-                                      print('taped');
-                                    },
+                                    onTap: () {},
                                     value: coinGraphController.vsCurrency,
                                     items: [
                                       DropdownMenuItem<String>(
@@ -122,8 +118,7 @@ class CoinGraphScreen extends StatelessWidget {
                         return Container(
                           child: LineChart(
                               LineChartData(
-                                borderData: FlBorderData(
-                                    show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
+                                borderData: FlBorderData(show: false, border: Border(bottom: BorderSide(width: 0.5, color: Colors.black26))),
                                 lineTouchData: LineTouchData(
                                   enabled: true,
                                   touchTooltipData: LineTouchTooltipData(
@@ -132,8 +127,7 @@ class CoinGraphScreen extends StatelessWidget {
                                       getTooltipItems: (List<LineBarSpot> linesBarSpots) {
                                         List<LineTooltipItem> lineTooltipItem = [];
                                         linesBarSpots.forEach((lineSpot) {
-                                          lineTooltipItem.add(LineTooltipItem(
-                                              lineSpot.y.toStringAsFixed(5), TextStyle(color: Color(0xff8E3670))));
+                                          lineTooltipItem.add(LineTooltipItem(lineSpot.y.toStringAsFixed(5), TextStyle(color: Color(0xff8E3670))));
                                         });
                                         // print(linesBarSpots.);
                                         return lineTooltipItem;
@@ -205,10 +199,7 @@ class CoinGraphScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          var oneHourAgo = DateTime.now()
-                              .subtract(Duration(hours: Duration.minutesPerHour * 6))
-                              .millisecondsSinceEpoch
-                              .toString();
+                          var oneHourAgo = DateTime.now().subtract(Duration(hours: Duration.minutesPerHour * 6)).millisecondsSinceEpoch.toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneHourAgo = oneHourAgo.substring(0, oneHourAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);
@@ -222,28 +213,25 @@ class CoinGraphScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          coinGraphController.fetchCoinGraph(coin: idCoin, vsCurrency: 'usd', days: '1');
+                          coinGraphController.fetchCoinGraph(coin: idCoin, days: '1');
                         },
                         child: Container(child: Text('1D')),
                       ),
                       GestureDetector(
                         onTap: () {
-                          coinGraphController.fetchCoinGraph(coin: idCoin, vsCurrency: 'usd', days: '7');
+                          coinGraphController.fetchCoinGraph(coin: idCoin, days: '7');
                         },
                         child: Container(child: Text('1W')),
                       ),
                       GestureDetector(
                         onTap: () {
-                          coinGraphController.fetchCoinGraph(coin: idCoin, vsCurrency: 'usd', days: '30');
+                          coinGraphController.fetchCoinGraph(coin: idCoin, days: '30');
                         },
                         child: Container(child: Text('1M')),
                       ),
                       GestureDetector(
                         onTap: () {
-                          var oneYearAgo = DateTime.now()
-                              .subtract(Duration(days: (Duration.hoursPerDay * 24) * 365))
-                              .millisecondsSinceEpoch
-                              .toString();
+                          var oneYearAgo = DateTime.now().subtract(Duration(days: (Duration.hoursPerDay * 24) * 365)).millisecondsSinceEpoch.toString();
                           var currentTime = DateTime.now().millisecondsSinceEpoch.toString();
                           oneYearAgo = oneYearAgo.substring(0, oneYearAgo.length - 3);
                           currentTime = currentTime.substring(0, currentTime.length - 3);

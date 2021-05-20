@@ -26,11 +26,9 @@ abstract class CoinGraphControllerBase with Store {
 
   @action
   fetchCoinGraph({String coin, String vsCurrency, String days = '1'}) async {
-    this.idCoin = coin;
-
     fetchCurrentPrice();
-    coinChartModel = CoinChartModel(id: coin);
-    coinChartModel = await CoinsGraphConn().dataChart(coin, vsCurrency, days);
+    coinChartModel = CoinChartModel(id: this.idCoin);
+    coinChartModel = await CoinsGraphConn().dataChart(this.idCoin, this.vsCurrency, days);
   }
 
   @action
